@@ -65,7 +65,7 @@ class DuckietownEnv(gym.Env):
         self.reward_range = (-1, 1000)
 
         # Environment configuration
-        self.maxSteps = 120
+        self.maxSteps = 10 #120
 
         # For rendering
         self.window = None
@@ -98,7 +98,13 @@ class DuckietownEnv(gym.Env):
         self.stepCount = 0
 
         # Tell the server to reset the simulation
-        self.socket.send_json({ "command":"reset" })
+        x = 1
+        y = numpy.random.uniform(0.9,1.1)
+        theta = numpy.random.uniform(3 * numpy.pi / 4, 5 * numpy.pi / 4)
+        self.socket.send_json({
+            "command":"reset",
+            "values":[float(x),float(y),float(theta)]
+         })
 
         # Receive state data (position, etc)
         self.stateData = self.socket.recv_json()
@@ -149,10 +155,10 @@ class DuckietownEnv(gym.Env):
         x1, y1, z1 = self.stateData['position']
         dx = x1 - x0
         dy = abs(y1 - 1.12) - abs(y0 - 1.12)
-        reward = 4 * -dx - 1 * dy
+        reward = 4 * -dx - 4 * dy
 
         # If past the maximum step count, stop the episode
-        done = self.stepCount >= self.maxSteps
+        done = self.stepCount >= self.maxSteps or abs(y1 - 1.12) > .3 or x1 < .1
 
         return self.img.transpose(), reward, done, self.stateData
 
