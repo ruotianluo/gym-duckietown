@@ -8,6 +8,8 @@ import gym
 from gym_duckietown.envs import DuckietownEnv
 import pyglet
 
+from transformations import euler_from_quaternion
+
 def main():
 
     env = gym.make('Duckietown-v0')
@@ -40,6 +42,9 @@ def main():
 
         if action is not None:
             obs, reward, done, info = env.step(action)
+            state = env.stateData
+            print(state['position'])
+            print(euler_from_quaternion(numpy.array(state['orientation'])))
 
             print('stepCount = %s, reward=%.3f' % (env.stepCount, reward))
 

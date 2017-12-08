@@ -9,6 +9,8 @@ import pyglet
 from pyglet.image import ImageData
 from pyglet.gl import glPushMatrix, glPopMatrix, glScalef, glTranslatef
 
+from scipy.stats import truncnorm
+
 # For Python 3 compatibility
 import sys
 if sys.version_info > (3,):
@@ -99,7 +101,8 @@ class DuckietownEnv(gym.Env):
 
         # Tell the server to reset the simulation
         x = 1
-        y = numpy.random.uniform(0.9,1.1)
+        # y = numpy.random.uniform(1.12-0.20,1.12+0.08)
+        y = truncnorm.rvs(0.08 / 0.1, -0.2 / 0.1, size=1)[0] * 0.1 + 1.12
         theta = numpy.random.uniform(3 * numpy.pi / 4, 5 * numpy.pi / 4)
         self.socket.send_json({
             "command":"reset",

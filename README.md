@@ -1,5 +1,16 @@
 # Gym-Duckietown
 
+## Collect simulation images with different pose
+
+```
+python collect_data.py
+```
+
+To specify the range of pose, change line 102, 103 in `envs/duckietown_env.py`:
+
+Note that the center of the right lane is has y as 1.12, and lower means more left. And theta being pi means facing front.
+---
+
 Duckietown environment for OpenAI gym. Connects to a remote ROS simulation
 using ZeroMQ.
 
